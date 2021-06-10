@@ -4,6 +4,12 @@
   "description": "Codingly template for Serverless Framework projects",
   "author": "Ariel Weinberger <ariel@codingly.io>",
   "license": "MIT",
+  "scripts": {
+    "deploy": "sls deploy -v",
+    "deploy:processAuctions": "sls deploy -f processAuctions -v",
+    "invoke:processAuctions": "sls invoke -f processAuctions -l",
+    "logs": "sls logs -t"
+  },
   "devDependencies": {
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
@@ -15,6 +21,13 @@
     "webpack": "^4.35.2"
   },
   "dependencies": {
-    "aws-sdk": "^2.639.0"
+    "@middy/core": "^2.2.0",
+    "@middy/http-error-handler": "^2.2.0",
+    "@middy/http-event-normalizer": "^2.2.0",
+    "@middy/http-json-body-parser": "^2.2.0",
+    "@middy/validator": "^2.3.0",
+    "aws-sdk": "^2.639.0",
+    "http-errors": "^1.8.0",
+    "uuid": "^8.3.2"
   }
 }
