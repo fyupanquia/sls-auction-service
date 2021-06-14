@@ -8,7 +8,7 @@ AuctionsTable:
         AttributeType: S
       - AttributeName: status
         AttributeType: S
-       - AttributeName: endingAt
+      - AttributeName: endingAt
         AttributeType: S
     KeySchema:
       - AttributeName: id

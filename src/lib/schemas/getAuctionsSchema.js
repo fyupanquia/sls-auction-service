@@ -6,13 +6,13 @@ const schema = {
       properties: {
         status: {
           type: "string",
-          emun: ["OPEN", "CLOSED"],
-          default: "ENV",
+          //emun: ["OPEN", "CLOSED"],
+          default: "OPEN",
         },
       },
     },
   },
-  rerquired: ["queryStringParameters"],
+  required: ["queryStringParameters"],
 };
 
 export default schema;

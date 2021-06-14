@@ -13,7 +13,7 @@ export async function getAuctionById(id) {
         Key: { id },
       })
       .promise();
-
+    console.log("result: ", result);
     auction = result.Item;
   } catch (error) {
     console.error(error);
@@ -25,13 +25,13 @@ export async function getAuctionById(id) {
   }
   return auction;
 }
-async function createAuction(event, context) {
+async function getAuction(event, context) {
   const { id } = event.pathParameters;
-  const auction = getAuctionById(id);
+  const auction = await getAuctionById(id);
   return {
     statusCode: 200,
     body: JSON.stringify(auction),
   };
 }
 
-export const handler = commonMiddleware(createAuction);
+export const handler = commonMiddleware(getAuction);

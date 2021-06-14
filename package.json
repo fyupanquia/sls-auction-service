@@ -1,5 +1,5 @@
 {
-  "name": "sls-base",
+  "name": "sls-auction-service",
   "version": "1.0.0",
   "description": "Codingly template for Serverless Framework projects",
   "author": "Ariel Weinberger <ariel@codingly.io>",
@@ -7,6 +7,7 @@
   "scripts": {
     "deploy": "sls deploy -v",
     "deploy:processAuctions": "sls deploy -f processAuctions -v",
+    "deploy:placeBid": "sls deploy -f placeBid -v",
     "invoke:processAuctions": "sls invoke -f processAuctions -l",
     "logs": "sls logs -t"
   },

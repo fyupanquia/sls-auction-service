@@ -11,7 +11,7 @@ const schema = {
       required: ["title"],
     },
   },
-  rerquired: ["body"],
+  required: ["body"],
 };
 
 export default schema;

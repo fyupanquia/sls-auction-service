@@ -1,24 +1,25 @@
-service:
-  name: sls-base
+service: sls-auction-service
 
 plugins:
   - serverless-bundle
   - serverless-pseudo-parameters
-
+disabledDeprecations:
+  - "*"
 provider:
   name: aws
   runtime: nodejs12.x
   memorySize: 256
   stage: ${opt:stage, 'dev'}
-  region: us-east-2
+  region: us-east-1
   environment:
-    AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTableName}
-  iamRoleStatements:
-    - ${file(iam/AuctionsTableIAM):AuctionsTableIAM}
-
+    AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTable.name}
+  iam:
+    role:
+      statements:
+        - ${file(iam/AuctionsTableIAM.yml):AuctionsTableIAM}
 resources:
   Resources:
-    AuctionsTable: ${file(resources/AuctionsTable):AuctionsTable}
+    AuctionsTable: ${file(resources/AuctionsTable.yml):AuctionsTable}
 functions:
   createAuction:
     handler: src/handlers/createAuction.handler
@@ -51,12 +52,12 @@ functions:
   processAuctions:
     handler: src/handlers/processAuctions.handler
     #events:
-      #- schedule: rate(1 minute)
+    #- schedule: rate(1 minute)
 custom:
-  #serverless-auth0-authorizer
-  authorizer: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:auth-service-${self:provider.stage}-auth
-  AuctionTable:
+  #serverless-auth0-authorizer https://github.com/fyupanquia/serverless-auth0-authorizer
+  authorizer: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:serverless-auth0-authorizer-${self:provider.stage}-auth
+  AuctionsTable:
     name: !Ref AuctionsTable
-    arn: !GetAtt AuctionsTable.arn
+    arn: !GetAtt AuctionsTable.Arn
   bundle:
     linting: false
