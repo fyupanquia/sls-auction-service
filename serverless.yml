@@ -3,8 +3,7 @@ service: sls-auction-service
 plugins:
   - serverless-bundle
   - serverless-pseudo-parameters
-disabledDeprecations:
-  - "*"
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -13,10 +12,12 @@ provider:
   region: us-east-1
   environment:
     AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTable.name}
+    MAIL_QUEUE_URL: ${self:custom.MailQueue.url}
   iam:
     role:
       statements:
         - ${file(iam/AuctionsTableIAM.yml):AuctionsTableIAM}
+        - ${file(iam/MailQueueIAM.yml):MailQueueIAM}
 resources:
   Resources:
     AuctionsTable: ${file(resources/AuctionsTable.yml):AuctionsTable}
@@ -59,5 +60,8 @@ custom:
   AuctionsTable:
     name: !Ref AuctionsTable
     arn: !GetAtt AuctionsTable.Arn
+  MailQueue:
+    arn: ${cf:sls-auction-notification-service-${self:provider.stage}.MailQueueArn}
+    url: ${cf:sls-auction-notification-service-${self:provider.stage}.MailQueueUrl}
   bundle:
     linting: false

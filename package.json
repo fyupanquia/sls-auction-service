@@ -6,8 +6,6 @@
   "license": "MIT",
   "scripts": {
     "deploy": "sls deploy -v",
-    "deploy:processAuctions": "sls deploy -f processAuctions -v",
-    "deploy:placeBid": "sls deploy -f placeBid -v",
     "invoke:processAuctions": "sls invoke -f processAuctions -l",
     "logs": "sls logs -t"
   },
