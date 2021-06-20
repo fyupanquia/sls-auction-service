@@ -7,7 +7,8 @@
   "scripts": {
     "deploy": "sls deploy -v",
     "invoke:processAuctions": "sls invoke -f processAuctions -l",
-    "logs": "sls logs -t"
+    "logs": "sls logs -t",
+    "logs:uploadAuctionPicture": "sls logs -f uploadAuctionPicture -t"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -21,11 +22,12 @@
   },
   "dependencies": {
     "@middy/core": "^2.2.0",
+    "@middy/http-cors": "^2.4.1",
     "@middy/http-error-handler": "^2.2.0",
     "@middy/http-event-normalizer": "^2.2.0",
     "@middy/http-json-body-parser": "^2.2.0",
     "@middy/validator": "^2.3.0",
-    "aws-sdk": "^2.639.0",
+    "aws-sdk": "^2.931.0",
     "http-errors": "^1.8.0",
     "uuid": "^8.3.2"
   }

@@ -4,6 +4,9 @@ plugins:
   - serverless-bundle
   - serverless-pseudo-parameters
 
+#disabledDeprecations:
+#  - '*' # To disable all deprecation messages
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -13,14 +16,18 @@ provider:
   environment:
     AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTable.name}
     MAIL_QUEUE_URL: ${self:custom.MailQueue.url}
+    AUCTIONS_BUCKET_NAME: ${self:custom.AuctionsBucket.name}
   iam:
     role:
       statements:
         - ${file(iam/AuctionsTableIAM.yml):AuctionsTableIAM}
         - ${file(iam/MailQueueIAM.yml):MailQueueIAM}
+        - ${file(iam/AuctionsBucketIAM.yml):AuctionsBucketIAM}
 resources:
   Resources:
     AuctionsTable: ${file(resources/AuctionsTable.yml):AuctionsTable}
+    AuctionsBucket: ${file(resources/AuctionsBucket.yml):AuctionsBucket}
+    AuctionsBucketPolicy: ${file(resources/AuctionsBucket.yml):AuctionsBucketPolicy}
 functions:
   createAuction:
     handler: src/handlers/createAuction.handler
@@ -28,6 +35,7 @@ functions:
       - http:
           method: POST
           path: /auction
+          cors: true
           authorizer: ${self:custom.authorizer}
   getAuctions:
     handler: src/handlers/getAuctions.handler
@@ -35,6 +43,7 @@ functions:
       - http:
           method: GET
           path: /auctions
+          cors: true
           authorizer: ${self:custom.authorizer}
   getAuction:
     handler: src/handlers/getAuction.handler
@@ -42,6 +51,7 @@ functions:
       - http:
           method: GET
           path: /auction/{id}
+          cors: true
           authorizer: ${self:custom.authorizer}
   placeBid:
     handler: src/handlers/placeBid.handler
@@ -49,11 +59,20 @@ functions:
       - http:
           method: PATCH
           path: /auction/{id}/bid
+          cors: true
           authorizer: ${self:custom.authorizer}
   processAuctions:
     handler: src/handlers/processAuctions.handler
     #events:
     #- schedule: rate(1 minute)
+  uploadAuctionPicture:
+    handler: src/handlers/uploadAuctionPicture.handler
+    events:
+      - http:
+          method: PATCH
+          path: auction/{id}/picture
+          cors: true
+          authorizer: ${self:custom.authorizer}
 custom:
   #serverless-auth0-authorizer https://github.com/fyupanquia/serverless-auth0-authorizer
   authorizer: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:serverless-auth0-authorizer-${self:provider.stage}-auth
@@ -63,5 +82,7 @@ custom:
   MailQueue:
     arn: ${cf:sls-auction-notification-service-${self:provider.stage}.MailQueueArn}
     url: ${cf:sls-auction-notification-service-${self:provider.stage}.MailQueueUrl}
+  AuctionsBucket:
+    name: auctions-bucket-3ypahffs-${self:provider.stage}
   bundle:
     linting: false
